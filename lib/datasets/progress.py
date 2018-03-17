@@ -39,7 +39,7 @@ except NameError:
 
 class progress(imdb):
     def __init__(self, image_set, devkit_path=None):
-        imdb.__init__(self, 'progress')
+        imdb.__init__(self, 'progress_' + image_set)
         self._year = '2007'
         self._image_set = image_set
         self._devkit_path = self._get_default_path() if devkit_path is None \
@@ -256,12 +256,10 @@ class progress(imdb):
     def _get_voc_results_file_template(self):
         # VOCdevkit/results/VOC2007/Main/<comp_id>_det_test_aeroplane.txt
         filename = self._get_comp_id() + '_det_' + self._image_set + '_{:s}.txt'
-        path = os.path.join(
-            self._devkit_path,
-            'results',
-            'VOC' + self._year,
-            'Main',
-            filename)
+        filedir = os.path.join(self._devkit_path, 'results', 'VOC' + self._year, 'Main')
+        if not os.path.exists(filedir):
+            os.makedirs(filedir)
+        path = os.path.join(filedir, filename)
         return path
 
     def _write_voc_results_file(self, all_boxes):
