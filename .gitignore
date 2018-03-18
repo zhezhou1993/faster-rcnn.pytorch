@@ -6,3 +6,4 @@ data/*
 *.swp
 logs/
 output/
+result.png
