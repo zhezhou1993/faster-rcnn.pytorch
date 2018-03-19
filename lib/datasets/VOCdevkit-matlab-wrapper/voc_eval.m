@@ -29,7 +29,11 @@ prec = [];
 ap = 0;
 ap_auc = 0;
 
-do_eval = (str2num(year) <= 2007) | ~strcmp(test_set, 'test');
+if isempty(str2num(year))
+    do_eval = strcmp(VOCopts.dataset, 'progress');
+else
+    do_eval = (str2num(year) <= 2007) | ~strcmp(test_set, 'test');
+end
 if do_eval
   % Bug in VOCevaldet requires that tic has been called first
   tic;
