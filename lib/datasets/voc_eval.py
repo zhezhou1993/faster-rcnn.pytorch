@@ -188,7 +188,7 @@ def voc_eval(detpath,
         ovmax = np.max(overlaps)
         jmax = np.argmax(overlaps)
 
-      if ovmax > ovthresh:
+      if ovmax >= ovthresh:
         if not R['difficult'][jmax]:
           if not R['det'][jmax]:
             tp[d] = 1.

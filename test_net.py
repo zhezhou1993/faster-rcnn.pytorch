@@ -294,10 +294,6 @@ if __name__ == '__main__':
             cls_dets = cls_dets[order]
             keep = nms(cls_dets, cfg.TEST.NMS)
             cls_dets = cls_dets[keep.view(-1).long()]
-            outpath = '{}/txt/density_exp{:02d}_{}.txt'.format(output_dir, 2*(i+1), imdb.classes[j])
-            out_data = cls_dets.cpu().numpy()
-            # [xmin ymin xmax ymax score] to [ymin xmin ymax xmax score]
-            np.savetxt(outpath, out_data[:, [1,0,3,2,4]], fmt='%d %d %d %d %.6f')
             if vis:
               im2show = vis_detections(im2show, imdb.classes[j], cls_dets.cpu().numpy(), 0.3)
             all_boxes[j][i] = cls_dets.cpu().numpy()
@@ -313,6 +309,10 @@ if __name__ == '__main__':
               for j in xrange(1, imdb.num_classes):
                   keep = np.where(all_boxes[j][i][:, -1] >= image_thresh)[0]
                   all_boxes[j][i] = all_boxes[j][i][keep, :]
+                  outpath = '{}/txt/density_exp{:02d}_{}.txt'.format(output_dir, 2*(i+1), imdb.classes[j])
+                  out_data = all_boxes[j][i]
+                  # [xmin ymin xmax ymax score] to [ymin xmin ymax xmax score]
+                  np.savetxt(outpath, out_data[:, [1,0,3,2,4]], fmt='%d %d %d %d %.6f')
 
       misc_toc = time.time()
       nms_time = misc_toc - misc_tic
