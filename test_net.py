@@ -312,7 +312,7 @@ if __name__ == '__main__':
                   outpath = '{}/txt/density_exp{:02d}_{}.txt'.format(output_dir, 2*(i+1), imdb.classes[j])
                   out_data = all_boxes[j][i]
                   # [xmin ymin xmax ymax score] to [ymin xmin ymax xmax score]
-                  np.savetxt(outpath, out_data[:, [1,0,3,2,4]], fmt='%d %d %d %d %.6f')
+                  np.savetxt(outpath, out_data[:, [1,0,3,2,4]], fmt='%d %d %d %d %.3f')
 
       misc_toc = time.time()
       nms_time = misc_toc - misc_tic
