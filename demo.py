@@ -162,12 +162,18 @@ if __name__ == '__main__':
   load_name = os.path.join(input_dir,
     'faster_rcnn_{}_{}_{}.pth'.format(args.checksession, args.checkepoch, args.checkpoint))
 
-  pascal_classes = np.asarray(['__background__',
-                       'aeroplane', 'bicycle', 'bird', 'boat',
-                       'bottle', 'bus', 'car', 'cat', 'chair',
-                       'cow', 'diningtable', 'dog', 'horse',
-                       'motorbike', 'person', 'pottedplant',
-                       'sheep', 'sofa', 'train', 'tvmonitor'])
+  #pascal_classes = np.asarray(['__background__',
+  #                     'aeroplane', 'bicycle', 'bird', 'boat',
+  #                     'bottle', 'bus', 'car', 'cat', 'chair',
+  #                     'cow', 'diningtable', 'dog', 'horse',
+  #                     'motorbike', 'person', 'pottedplant',
+  #                     'sheep', 'sofa', 'train', 'tvmonitor'])
+
+  pascal_classes = np.asarray(['__background__', # always index 0
+                         'tide', 'spray_bottle', 'waterpot', 'sugar',
+                         'red_bowl', 'clorox', 'sunscreen', 'downy', 'salt',
+                         'toy', 'detergent', 'scotch_brite', 'coke',
+                         'blue_cup', 'ranch'])
 
   # initilize the network here.
   if args.net == 'vgg16':
