@@ -51,7 +51,7 @@ fprintf('!!! %s : %.4f %.4f\n', cls, ap, ap_auc);
 
 res.recall = recall;
 res.prec = prec;
-res.ap = ap;
+res.ap = ap_auc;
 res.ap_auc = ap_auc;
 
 save([output_dir '/' cls '_pr.mat'], ...
