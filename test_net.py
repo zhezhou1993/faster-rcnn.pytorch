@@ -89,6 +89,10 @@ def parse_args():
   parser.add_argument('--vis', dest='vis',
                       help='visualization mode',
                       action='store_true')
+  parser.add_argument('--cls_thresh', default=0.0, type=float,
+                      help='classifier threshold')
+  parser.add_argument('--max_boxes', default=0, type=int,
+                      help='max_per_image detections *over all classes*')
   args = parser.parse_args()
   return args
 
@@ -203,7 +207,7 @@ if __name__ == '__main__':
     fasterRCNN.cuda()
 
   start = time.time()
-  max_per_image = 100
+  max_per_image = args.max_boxes
 
   vis = args.vis
 
@@ -313,6 +317,14 @@ if __name__ == '__main__':
                   out_data = all_boxes[j][i]
                   # [xmin ymin xmax ymax score] to [ymin xmin ymax xmax score]
                   np.savetxt(outpath, out_data[:, [1,0,3,2,4]], fmt='%d %d %d %d %.3f')
+      else:
+          for j in xrange(1, imdb.num_classes):
+              keep = np.where(all_boxes[j][i][:, -1] >= args.cls_thresh)[0]
+              all_boxes[j][i] = all_boxes[j][i][keep, :]
+              outpath = '{}/txt/density_{}_{}.txt'.format(output_dir, imdb.image_index[i], imdb.classes[j])
+              out_data = all_boxes[j][i]
+              # [xmin ymin xmax ymax score] to [ymin xmin ymax xmax score]
+              np.savetxt(outpath, out_data[:, [1,0,3,2,4]], fmt='%d %d %d %d %.3f')
 
       misc_toc = time.time()
       nms_time = misc_toc - misc_tic

@@ -95,6 +95,8 @@ def parse_args():
   parser.add_argument('--webcam_num', dest='webcam_num',
                       help='webcam ID number',
                       default=-1, type=int)
+  parser.add_argument('--cls_thresh', default=0.5, type=float,
+                      help='classifier threshold')
 
   args = parser.parse_args()
   return args
@@ -340,7 +342,7 @@ if __name__ == '__main__':
             keep = nms(cls_dets, cfg.TEST.NMS)
             cls_dets = cls_dets[keep.view(-1).long()]
             if vis:
-              im2show = vis_detections(im2show, pascal_classes[j], cls_dets.cpu().numpy(), 0.5)
+              im2show = vis_detections(im2show, pascal_classes[j], cls_dets.cpu().numpy(), args.cls_thresh)
 
       misc_toc = time.time()
       nms_time = misc_toc - misc_tic
