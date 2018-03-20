@@ -173,6 +173,7 @@ __C.TEST.MAX_SIZE = 1000
 # Overlap threshold used for non-maximum suppression (suppress boxes with
 # IoU >= this threshold)
 __C.TEST.NMS = 0.3
+# __C.TEST.NMS = 0.9
 
 # Experimental: treat the (K+1) units in the cls_score layer as linear
 # predictors (trained, eg, with one-vs-rest SVMs).
@@ -189,11 +190,14 @@ __C.TEST.PROPOSAL_METHOD = 'gt'
 
 ## NMS threshold used on RPN proposals
 __C.TEST.RPN_NMS_THRESH = 0.7
+# __C.TEST.RPN_NMS_THRESH = 0.9
 ## Number of top scoring boxes to keep before apply NMS to RPN proposals
 __C.TEST.RPN_PRE_NMS_TOP_N = 6000
+# __C.TEST.RPN_PRE_NMS_TOP_N = 10000
 
 ## Number of top scoring boxes to keep after applying NMS to RPN proposals
 __C.TEST.RPN_POST_NMS_TOP_N = 300
+# __C.TEST.RPN_POST_NMS_TOP_N = 10000
 
 # Proposal height and width both need to be greater than RPN_MIN_SIZE (at orig image scale)
 __C.TEST.RPN_MIN_SIZE = 16
