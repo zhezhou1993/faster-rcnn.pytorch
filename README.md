@@ -1,5 +1,14 @@
 # A *Faster* Pytorch Implementation of Faster R-CNN
 
+## Some common commands
+
+* `python trainval_net.py --dataset progress --net vgg16 --bs 4 --cuda`
+
+* `python test_net.py --dataset progress --net vgg16 --checksession 1 --checkepoch 19 --checkpoint 880 --cuda --max_boxes 100 (or --cls_thresh 0.5)`
+
+* `python demo.py --net vgg16 --checksession 1 --checkepoch 19 --checkpoint 880 --cuda --net vgg16 --dataset progress --cls_thresh 0.1`
+
+
 ## Introduction
 
 This project is a *faster* pytorch implementation of faster R-CNN, aimed to accelerating the training of faster R-CNN object detection models. Recently, there are a number of good implementations:
