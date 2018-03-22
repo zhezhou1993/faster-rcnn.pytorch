@@ -109,25 +109,25 @@ def voc_eval(detpath,
     lines = f.readlines()
   imagenames = [x.strip() for x in lines]
 
-  if not os.path.isfile(cachefile):
+  #if not os.path.isfile(cachefile):
     # load annotations
-    recs = {}
-    for i, imagename in enumerate(imagenames):
-      recs[imagename] = parse_rec(annopath.format(imagename))
-      if i % 100 == 0:
-        print('Reading annotation for {:d}/{:d}'.format(
-          i + 1, len(imagenames)))
-    # save
-    print('Saving cached annotations to {:s}'.format(cachefile))
-    with open(cachefile, 'wb') as f:
-      pickle.dump(recs, f)
-  else:
-    # load
-    with open(cachefile, 'rb') as f:
-      try:
-        recs = pickle.load(f)
-      except:
-        recs = pickle.load(f, encoding='bytes')
+  recs = {}
+  for i, imagename in enumerate(imagenames):
+    recs[imagename] = parse_rec(annopath.format(imagename))
+    if i % 100 == 0:
+      print('Reading annotation for {:d}/{:d}'.format(
+        i + 1, len(imagenames)))
+  # save
+  print('Saving cached annotations to {:s}'.format(cachefile))
+  with open(cachefile, 'wb') as f:
+    pickle.dump(recs, f)
+  #else:
+    ## load
+    #with open(cachefile, 'rb') as f:
+      #try:
+        #recs = pickle.load(f)
+      #except:
+        #recs = pickle.load(f, encoding='bytes')
 
   # extract gt objects for this class
   class_recs = {}
