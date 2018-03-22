@@ -9,3 +9,5 @@ output/
 result.png
 .vscode/
 images/*
+*.kdev4
+.kdev4/
