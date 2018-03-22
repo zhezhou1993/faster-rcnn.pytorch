@@ -8,6 +8,7 @@
 
 * `python demo.py --net vgg16 --checksession 1 --checkepoch 19 --checkpoint 880 --cuda --net vgg16 --dataset progress --cls_thresh 0.1`
 
+* `python reval.py --imdb progress_test --output_dir output/vgg16/progress_test/faster_rcnn_10 --matlab`
 
 ## Introduction
 
