@@ -370,7 +370,7 @@ if __name__ == '__main__':
             'loss_rcnn_box': loss_rcnn_box
           }
           for tag, value in info.items():
-            logger.scalar_summary(tag, value, step)
+            logger.scalar_summary(tag, value, (epoch-1)*iters_per_epoch+step)
 
         loss_temp = 0
         start = time.time()
