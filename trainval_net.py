@@ -155,7 +155,8 @@ if __name__ == '__main__':
   if args.use_tfboard:
     from model.utils.logger import Logger
     # Set the logger
-    logger = Logger('./logs')
+    logger = Logger(os.path.join('./logs', \
+                    args.net + '_' + args.dataset + '_' + args.optimizer + '_' + str(args.batch_size)))
 
   if args.dataset == "progress":
       args.imdb_name = "progress_train"
@@ -367,7 +368,8 @@ if __name__ == '__main__':
             'loss_rpn_cls': loss_rpn_cls,
             'loss_rpn_box': loss_rpn_box,
             'loss_rcnn_cls': loss_rcnn_cls,
-            'loss_rcnn_box': loss_rcnn_box
+            'loss_rcnn_box': loss_rcnn_box,
+            'learning_rate': lr
           }
           for tag, value in info.items():
             logger.scalar_summary(tag, value, (epoch-1)*iters_per_epoch+step)
