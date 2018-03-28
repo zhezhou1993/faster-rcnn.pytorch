@@ -1,14 +1,20 @@
 # A *Faster* Pytorch Implementation of Faster R-CNN
 
-## Some common commands
+## Some common ommands
 
-* `python trainval_net.py --dataset progress --net vgg16 --bs 4 --cuda`
+* `python trainval_net.py --dataset progress --net vgg16 --bs 4 --cuda --s SESSION --epochs 30 --lr 0.01 --lr_decay_step 10 --lr_decay_gamma 0.5 --use_tfboard (--o sgd or adam)
 
 * `python test_net.py --dataset progress --net vgg16 --checksession 1 --checkepoch 19 --checkpoint 880 --cuda --max_boxes 100 (or --cls_thresh 0.5)`
 
 * `python demo.py --net vgg16 --checksession 1 --checkepoch 19 --checkpoint 880 --cuda --net vgg16 --dataset progress --cls_thresh 0.1`
 
 * `python reval.py --imdb progress_test --output_dir output/vgg16/progress_test/faster_rcnn_10 --matlab`
+
+*  tensorboard --logdir=./logs
+
+*  python trainval_net.py --net vgg16 --dataset progress --r True --checksession 1 --checkepoch 24 --checkpoint 431 --use_tfboard --epochs 30 --cuda --lr 0.0025 --lr_decay_step 10 --bs 4
+
+*  python ros_demo.py --net vgg16 --checksession 1 --checkepoch 24 --checkpoint 431 --cuda --net vgg16 --dataset progress --cls_thresh 0.6
 
 ## Introduction
 
