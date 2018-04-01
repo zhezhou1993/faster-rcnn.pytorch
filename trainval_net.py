@@ -156,7 +156,7 @@ if __name__ == '__main__':
     from model.utils.logger import Logger
     # Set the logger
     logger = Logger(os.path.join('./logs', \
-                    args.net + '_' + args.dataset + '_' + args.optimizer + '_' + str(args.batch_size)))
+                    args.net + '_' + args.dataset + '_' + args.optimizer + '_' + str(args.session)))
 
   if args.dataset == "progress":
       args.imdb_name = "progress_train"
