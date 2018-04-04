@@ -232,6 +232,8 @@ if __name__ == '__main__':
 
   _t = {'im_detect': time.time(), 'misc': time.time()}
   det_file = os.path.join(output_dir, 'detections.pkl')
+  if not os.path.exists(output_dir+'/txt/'):
+    os.makedirs(output_dir+'/txt/')
 
   fasterRCNN.eval()
   empty_array = np.transpose(np.array([[],[],[],[],[]]), (1,0))
