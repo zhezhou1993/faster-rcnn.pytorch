@@ -243,7 +243,7 @@ class resnet(_fasterRCNN):
       resnet = resnet101()
       self.model_path = model_urls['resnet101']
 
-    if self.num_layers = 152:
+    if self.num_layers == 152:
       resnet = resnet152()
       self.model_path = model_urls['resnet152']
 

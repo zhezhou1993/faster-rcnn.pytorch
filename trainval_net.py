@@ -31,6 +31,8 @@ from model.utils.net_utils import weights_normal_init, save_net, load_net, \
       adjust_learning_rate, save_checkpoint, clip_gradient
 
 from model.faster_rcnn.vgg16 import vgg16
+from model.faster_rcnn.vgg11 import vgg11
+from model.faster_rcnn.vgg19 import vgg19
 from model.faster_rcnn.resnet import resnet
 
 def parse_args():
@@ -245,8 +247,12 @@ if __name__ == '__main__':
     cfg.CUDA = True
 
   # initilize the network here.
-  if args.net == 'vgg16':
+  if args.net == 'vgg11':
+  	fasterRCNN = vgg11(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
+  elif args.net == 'vgg16':
     fasterRCNN = vgg16(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
+  elif args.net == 'vgg19':
+  	fasterRCNN = vgg19(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
   elif args.net == 'res101':
     fasterRCNN = resnet(imdb.classes, 101, pretrained=True, class_agnostic=args.class_agnostic)
   elif args.net == 'res50':
@@ -301,7 +307,7 @@ if __name__ == '__main__':
     fasterRCNN.cuda()
 
   iters_per_epoch = int(train_size / args.batch_size)
-
+  print("here")
   for epoch in range(args.start_epoch, args.max_epochs + 1):
     # setting to train mode
     fasterRCNN.train()
