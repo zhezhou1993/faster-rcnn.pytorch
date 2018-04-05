@@ -118,6 +118,7 @@ def parse_args():
                       help='whether use tensorflow tensorboard',
                       action='store_true')
 
+  parser.add_argument('--use_pytorch', dest='use_pytorch', help='using pytorch model', action='store_true')
   args = parser.parse_args()
   return args
 
@@ -204,6 +205,9 @@ if __name__ == '__main__':
 
   # train set
   # -- Note: Use validation set and disable the flipped to enable faster loading.
+  if args.use_pytorch:
+  	cfg.PIXEL_MEANS = np.array([[[0,0,0]]])
+
   cfg.TRAIN.USE_FLIPPED = True
   cfg.USE_GPU_NMS = args.cuda
   imdb, roidb, ratio_list, ratio_index = combined_roidb(args.imdb_name)
@@ -217,8 +221,13 @@ if __name__ == '__main__':
 
   sampler_batch = sampler(train_size, args.batch_size)
 
+  if args.use_pytorch:
+  	normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+  else:
+  	normalize = None
+
   dataset = roibatchLoader(roidb, ratio_list, ratio_index, args.batch_size, \
-                           imdb.num_classes, training=True)
+                           imdb.num_classes, training=True, normalize=normalize)
 
   dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
                             sampler=sampler_batch, num_workers=args.num_workers)
