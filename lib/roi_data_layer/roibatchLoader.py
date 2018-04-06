@@ -210,7 +210,7 @@ class roibatchLoader(data.Dataset):
         data = data.permute(0, 3, 1, 2).contiguous().view(3, data_height, data_width)
         if self.normalize:
             data = self.normalize(data.div(255))
- 
+
         im_info = im_info.view(3)
 
         gt_boxes = torch.FloatTensor([1,1,1,1,1])

@@ -9,3 +9,5 @@ output/
 result.png
 .vscode/
 images/*
+network/*
+network_log/*
