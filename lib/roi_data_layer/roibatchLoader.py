@@ -200,11 +200,17 @@ class roibatchLoader(data.Dataset):
 
             # permute trim_data to adapt to downstream processing
         padding_data = padding_data.permute(2, 0, 1).contiguous()
+        if self.normalize:
+            padding_data = self.normalize(padding_data.div(255))
+
         im_info = im_info.view(3)
 
         return padding_data, im_info, gt_boxes_padding, num_boxes
     else:
         data = data.permute(0, 3, 1, 2).contiguous().view(3, data_height, data_width)
+        if self.normalize:
+            data = self.normalize(data.div(255))
+ 
         im_info = im_info.view(3)
 
         gt_boxes = torch.FloatTensor([1,1,1,1,1])

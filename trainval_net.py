@@ -214,9 +214,16 @@ if __name__ == '__main__':
     os.makedirs(output_dir)
 
   sampler_batch = sampler(train_size, args.batch_size)
+  
+  caffe_pretrain = False
+  if not caffe_pretrain:
+    cfg.PIXEL_MEANS = np.array([[[0, 0, 0]]])
+  if not caffe_pretrain:
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                     std=[0.229, 0.224, 0.225])
 
   dataset = roibatchLoader(roidb, ratio_list, ratio_index, args.batch_size, \
-                           imdb.num_classes, training=True)
+                           imdb.num_classes, training=True, normalize=normalize)
 
   dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
                             sampler=sampler_batch, num_workers=args.num_workers)

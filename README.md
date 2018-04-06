@@ -4,6 +4,8 @@
 
 * `python trainval_net.py --dataset progress --net vgg16 --bs 4 --cuda`
 
+* `python trainval_net.py --dataset pascal_voc --net res101 --bs 1 --cuda --epochs 7 --use_tfboard --s 999`
+
 * `python test_net.py --dataset progress --net vgg16 --checksession 1 --checkepoch 19 --checkpoint 880 --cuda --max_boxes 100 (or --cls_thresh 0.5)`
 
 * `python demo.py --net vgg16 --checksession 1 --checkepoch 19 --checkpoint 880 --cuda --net vgg16 --dataset progress --cls_thresh 0.1`
