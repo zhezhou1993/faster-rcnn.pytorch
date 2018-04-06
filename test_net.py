@@ -32,6 +32,7 @@ from model.faster_rcnn.vgg19 import vgg19
 from model.faster_rcnn.vgg16 import vgg16
 from model.faster_rcnn.vgg11 import vgg11
 from model.faster_rcnn.resnet import resnet
+import torchvision.transforms as transforms
 
 import pdb
 
@@ -152,6 +153,9 @@ if __name__ == '__main__':
   imdb, roidb, ratio_list, ratio_index = combined_roidb(args.imdbval_name, False)
   imdb.competition_mode(on=True)
 
+  caffe_pretrain=False
+  if not caffe_pretrain:
+      cfg.PIXEL_MEANS = np.array([[[0, 0, 0]]])
   print('{:d} roidb entries'.format(len(roidb)))
 
   input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
@@ -228,8 +232,13 @@ if __name__ == '__main__':
                for _ in xrange(imdb.num_classes)]
 
   output_dir = get_output_dir(imdb, save_name)
+  if caffe_pretrain:
+    normalize = None
+  else:
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                  std=[0.229, 0.224, 0.225])
   dataset = roibatchLoader(roidb, ratio_list, ratio_index, args.batch_size, \
-                        imdb.num_classes, training=False, normalize = False)
+                        imdb.num_classes, training=False, normalize = normalize)
   dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
                             shuffle=False, num_workers=0,
                             pin_memory=True)
@@ -238,6 +247,8 @@ if __name__ == '__main__':
 
   _t = {'im_detect': time.time(), 'misc': time.time()}
   det_file = os.path.join(output_dir, 'detections.pkl')
+  if not os.path.exists(output_dir+'/txt/'):
+    os.makedirs(output_dir+'/txt/')
 
   fasterRCNN.eval()
   empty_array = np.transpose(np.array([[],[],[],[],[]]), (1,0))
