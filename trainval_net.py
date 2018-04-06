@@ -118,7 +118,6 @@ def parse_args():
                       help='whether use tensorflow tensorboard',
                       action='store_true')
 
-  parser.add_argument('--use_pytorch', dest='use_pytorch', help='using pytorch model', action='store_true')
   args = parser.parse_args()
   return args
 
@@ -205,9 +204,6 @@ if __name__ == '__main__':
 
   # train set
   # -- Note: Use validation set and disable the flipped to enable faster loading.
-  if args.use_pytorch:
-  	cfg.PIXEL_MEANS = np.array([[[0,0,0]]])
-
   cfg.TRAIN.USE_FLIPPED = True
   cfg.USE_GPU_NMS = args.cuda
   imdb, roidb, ratio_list, ratio_index = combined_roidb(args.imdb_name)
@@ -220,11 +216,13 @@ if __name__ == '__main__':
     os.makedirs(output_dir)
 
   sampler_batch = sampler(train_size, args.batch_size)
-
-  if args.use_pytorch:
-  	normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-  else:
-  	normalize = None
+  
+  caffe_pretrain = False
+  if not caffe_pretrain:
+    cfg.PIXEL_MEANS = np.array([[[0, 0, 0]]])
+  if not caffe_pretrain:
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                     std=[0.229, 0.224, 0.225])
 
   dataset = roibatchLoader(roidb, ratio_list, ratio_index, args.batch_size, \
                            imdb.num_classes, training=True, normalize=normalize)
@@ -256,12 +254,12 @@ if __name__ == '__main__':
     cfg.CUDA = True
 
   # initilize the network here.
-  if args.net == 'vgg11':
-  	fasterRCNN = vgg11(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
-  elif args.net == 'vgg16':
+  if args.net == 'vgg16':
     fasterRCNN = vgg16(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
+  elif args.net == 'vgg11':
+    fasterRCNN = vgg11(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
   elif args.net == 'vgg19':
-  	fasterRCNN = vgg19(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
+    fasterRCNN = vgg19(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
   elif args.net == 'res101':
     fasterRCNN = resnet(imdb.classes, 101, pretrained=True, class_agnostic=args.class_agnostic)
   elif args.net == 'res50':
@@ -316,7 +314,7 @@ if __name__ == '__main__':
     fasterRCNN.cuda()
 
   iters_per_epoch = int(train_size / args.batch_size)
-  print("here")
+
   for epoch in range(args.start_epoch, args.max_epochs + 1):
     # setting to train mode
     fasterRCNN.train()
@@ -348,8 +346,8 @@ if __name__ == '__main__':
       # backward
       optimizer.zero_grad()
       loss.backward()
-      # if args.net == "vgg16" or args.net =="vgg11":
-      clip_gradient(fasterRCNN, 10.)
+      if args.net == "vgg16":
+          clip_gradient(fasterRCNN, 10.)
       optimizer.step()
 
       if step % args.disp_interval == 0:
