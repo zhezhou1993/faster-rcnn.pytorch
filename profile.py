@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 # --------------------------------------------------------
 # Tensorflow Faster R-CNN
 # Licensed under The MIT License [see LICENSE for details]
@@ -32,8 +33,11 @@ from model.nms.nms_wrapper import nms
 from model.rpn.bbox_transform import bbox_transform_inv
 from model.utils.net_utils import save_net, load_net, vis_detections
 from model.utils.blob import im_list_to_blob
+from model.faster_rcnn.vgg19 import vgg19
 from model.faster_rcnn.vgg16 import vgg16
+from model.faster_rcnn.vgg11 import vgg11
 from model.faster_rcnn.resnet import resnet
+
 import pdb
 
 try:
@@ -184,8 +188,12 @@ if __name__ == '__main__':
            'sheep', 'sofa', 'train', 'tvmonitor'])
 
   # initilize the network here.
-  if args.net == 'vgg16':
+  if args.net == 'vgg11':
+    fasterRCNN = vgg11(pascal_classes, pretrained=False, class_agnostic=args.class_agnostic)
+  elif args.net == 'vgg16':
     fasterRCNN = vgg16(pascal_classes, pretrained=False, class_agnostic=args.class_agnostic)
+  elif args.net == 'vgg19':
+    fasterRCNN = vgg19(pascal_classes, pretrained=False, class_agnostic=args.class_agnostic)
   elif args.net == 'res101':
     fasterRCNN = resnet(pascal_classes, 101, pretrained=False, class_agnostic=args.class_agnostic)
   elif args.net == 'res50':
@@ -299,79 +307,4 @@ if __name__ == '__main__':
       RCNN_loss_cls, RCNN_loss_bbox, \
       rois_label = fasterRCNN(im_data, im_info, gt_boxes, num_boxes)
 
-      scores = cls_prob.data
-      boxes = rois.data[:, :, 1:5]
-
-      if cfg.TEST.BBOX_REG:
-          # Apply bounding-box regression deltas
-          box_deltas = bbox_pred.data
-          if cfg.TRAIN.BBOX_NORMALIZE_TARGETS_PRECOMPUTED:
-          # Optionally normalize targets by a precomputed mean and stdev
-            if args.class_agnostic:
-                box_deltas = box_deltas.view(-1, 4) * torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_STDS).cuda() \
-                           + torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_MEANS).cuda()
-                box_deltas = box_deltas.view(1, -1, 4)
-            else:
-                box_deltas = box_deltas.view(-1, 4) * torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_STDS).cuda() \
-                           + torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_MEANS).cuda()
-                box_deltas = box_deltas.view(1, -1, 4 * len(pascal_classes))
-
-          pred_boxes = bbox_transform_inv(boxes, box_deltas, 1)
-          pred_boxes = clip_boxes(pred_boxes, im_info.data, 1)
-      else:
-          # Simply repeat the boxes, once for each class
-          pred_boxes = np.tile(boxes, (1, scores.shape[1]))
-
-      pred_boxes /= im_scales[0]
-
-      scores = scores.squeeze()
-      pred_boxes = pred_boxes.squeeze()
-      det_toc = time.time()
-      detect_time = det_toc - det_tic
-      misc_tic = time.time()
-      if vis:
-          im2show = np.copy(im)
-      for j in xrange(1, len(pascal_classes)):
-          inds = torch.nonzero(scores[:,j]>thresh).view(-1)
-          # if there is det
-          if inds.numel() > 0:
-            cls_scores = scores[:,j][inds]
-            _, order = torch.sort(cls_scores, 0, True)
-            if args.class_agnostic:
-              cls_boxes = pred_boxes[inds, :]
-            else:
-              cls_boxes = pred_boxes[inds][:, j * 4:(j + 1) * 4]
-            
-            cls_dets = torch.cat((cls_boxes, cls_scores.unsqueeze(1)), 1)
-            # cls_dets = torch.cat((cls_boxes, cls_scores), 1)
-            cls_dets = cls_dets[order]
-            keep = nms(cls_dets, cfg.TEST.NMS)
-            cls_dets = cls_dets[keep.view(-1).long()]
-            if vis:
-              im2show = vis_detections(im2show, pascal_classes[j], cls_dets.cpu().numpy(), args.cls_thresh)
-
-      misc_toc = time.time()
-      nms_time = misc_toc - misc_tic
-
-      if webcam_num == -1:
-          sys.stdout.write('im_detect: {:d}/{:d} {:.3f}s {:.3f}s   \r' \
-                           .format(num_images + 1, len(imglist), detect_time, nms_time))
-          sys.stdout.flush()
-
-      if vis and webcam_num == -1:
-          # cv2.imshow('test', im2show)
-          # cv2.waitKey(0)
-          result_path = os.path.join(args.image_dir, imglist[num_images][:-4] + "_det.jpg")
-          cv2.imwrite(result_path, im2show)
-      else:
-          im2showRGB = cv2.cvtColor(im2show, cv2.COLOR_BGR2RGB)
-          cv2.imshow("frame", im2showRGB)
-          total_toc = time.time()
-          total_time = total_toc - total_tic
-          frame_rate = 1 / total_time
-          print('Frame rate:', frame_rate)
-          if cv2.waitKey(1) & 0xFF == ord('q'):
-              break
-  if webcam_num >= 0:
-      cap.release()
-      cv2.destroyAllWindows()
+     
