@@ -222,36 +222,35 @@ class resnet(_fasterRCNN):
     self.num_layers = num_layers
     self.pretrained = pretrained
     self.class_agnostic = class_agnostic
+    self.classes = classes
+    if num_layers >= 50:
+      self.dout_base_model = 1024
+    else:
+      self.dout_base_model = 256
+    _fasterRCNN.__init__(self, self.classes, self.class_agnostic)
 
-    _fasterRCNN.__init__(self, classes, class_agnostic)
 
   def _init_modules(self):
+    print('--------init')
     if self.num_layers == 18:
       resnet = resnet18()
       self.model_path = model_urls['resnet18']
-      self.dout_base_model = 256
-
 
     if self.num_layers == 34:
       resnet = resnet34()
       self.model_path = model_urls['resnet34']
-      self.dout_base_model = 256
-
 
     if self.num_layers == 50:
       resnet = resnet50()
       self.model_path = model_urls['resnet50']
-      self.dout_base_model = 1024
 
     if self.num_layers == 101:
       resnet = resnet101()
       self.model_path = model_urls['resnet101']
-      self.dout_base_model = 1024
 
     if self.num_layers == 152:
       resnet = resnet152()
       self.model_path = model_urls['resnet152']
-      self.dout_base_model = 1024
 
 
     if self.pretrained == True:
@@ -266,11 +265,19 @@ class resnet(_fasterRCNN):
 
     self.RCNN_top = nn.Sequential(resnet.layer4)
 
-    self.RCNN_cls_score = nn.Linear(2048, self.n_classes)
-    if self.class_agnostic:
-      self.RCNN_bbox_pred = nn.Linear(2048, 4)
+
+    if self.num_layers >=50:
+      self.RCNN_cls_score = nn.Linear(2048, self.n_classes)
+      if self.class_agnostic:
+        self.RCNN_bbox_pred = nn.Linear(2048, 4)
+      else:
+        self.RCNN_bbox_pred = nn.Linear(2048, 4 * self.n_classes)
     else:
-      self.RCNN_bbox_pred = nn.Linear(2048, 4 * self.n_classes)
+      self.RCNN_cls_score = nn.Linear(512, self.n_classes)
+      if self.class_agnostic:
+        self.RCNN_bbox_pred = nn.Linear(512, 4)
+      else:
+        self.RCNN_bbox_pred = nn.Linear(512, 4 * self.n_classes)
 
     # Fix blocks
     for p in self.RCNN_base[0].parameters(): p.requires_grad=False
