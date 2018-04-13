@@ -16,8 +16,14 @@ from datasets.coco import coco
 from datasets.imagenet import imagenet
 from datasets.vg import vg
 from datasets.progress import progress
+from datasets.kitti import kitti
 
 import numpy as np
+
+# Set up kitti
+for split in ['train', 'test']:
+    name = 'kitti_{}'.format(split)
+    __sets[name] = (lambda split=split: kitti(split))
 
 # Set up progress
 for split in ['train', 'test']:
