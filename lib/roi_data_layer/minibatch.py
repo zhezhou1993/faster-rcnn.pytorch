@@ -69,7 +69,7 @@ def _get_image_blob(roidb, scale_inds):
       im = im[:,:,np.newaxis]
       im = np.concatenate((im,im,im), axis=2)
     # flip the channel, since the original one using cv2
-    # rgb -> bgr
+    # rgb -> bgr if using caffe pretrained model
     #im = im[:,:,::-1]
 
     if roidb[i]['flipped']:

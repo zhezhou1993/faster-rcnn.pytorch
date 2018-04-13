@@ -226,11 +226,12 @@ if __name__ == '__main__':
                for _ in xrange(imdb.num_classes)]
 
   output_dir = get_output_dir(imdb, save_name)
-  if caffe_pretrain:
-    normalize = None
-  else:
+  if not caffe_pretrain:
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                   std=[0.229, 0.224, 0.225])
+  else:
+    normalize = None
+
   dataset = roibatchLoader(roidb, ratio_list, ratio_index, args.batch_size, \
                         imdb.num_classes, training=False, normalize = normalize)
   dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,

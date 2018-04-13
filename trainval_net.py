@@ -218,9 +218,10 @@ if __name__ == '__main__':
   caffe_pretrain = False
   if not caffe_pretrain:
     cfg.PIXEL_MEANS = np.array([[[0, 0, 0]]])
-  if not caffe_pretrain:
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
+  else:
+    normalize = None
 
   dataset = roibatchLoader(roidb, ratio_list, ratio_index, args.batch_size, \
                            imdb.num_classes, training=True, normalize=normalize)
