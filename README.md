@@ -97,8 +97,9 @@ Thanks to [Remi](https://github.com/Cadene) for providing the pretrained detecti
 ### What we are going to do
 
 - [x] Support both python2 and python3 (great thanks to [cclauss](https://github.com/cclauss)).
-- [ ] Run systematical experiments on PASCAL VOC 07/12, COCO, ImageNet, Visual Genome (VG) with different settings.
-- [ ] Write a detailed report about the new stuffs in our implementations, and the quantitative results in our experiments.
+- [ ] Add deformable pooling layer as an alternative way for roi pooling (mainly supported by [Xander](https://github.com/xanderchf))
+- [ ] ~~Run systematical experiments on PASCAL VOC 07/12, COCO, ImageNet, Visual Genome (VG) with different settings.~~
+- [ ] ~~Write a detailed report about the new stuffs in our implementations, and the quantitative results in our experiments.~~
 
 ## Preparation 
 
@@ -110,7 +111,7 @@ git clone https://github.com/jwyang/faster-rcnn.pytorch.git
 
 Then, create a folder:
 ```
-mkdir data
+cd faster-rcnn.pytorch && mkdir data
 ```
 
 ### prerequisites
@@ -143,7 +144,7 @@ Download them and put them into the data/pretrained_model/.
 
 ### Compilation
 
-As pointed out by [ruotianluo/pytorch-faster-rcnn](https://github.com/ruotianluo/pytorch-faster-rcnn), choose the right `-arch` to compile the cuda code:
+As pointed out by [ruotianluo/pytorch-faster-rcnn](https://github.com/ruotianluo/pytorch-faster-rcnn), choose the right `-arch` in `make.sh` file, to compile the cuda code:
 
   | GPU model  | Architecture |
   | ------------- | ------------- |
@@ -232,6 +233,8 @@ Below are some detection results:
 <div style="color:#0000FF" align="center">
 <img src="images/img3_det_res101.jpg" width="430"/> <img src="images/img4_det_res101.jpg" width="430"/>
 </div>
+
+## Webcam Demo
 
 You can use a webcam in a real-time demo by running
 ```
