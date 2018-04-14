@@ -23,7 +23,7 @@ import pickle
 from .imdb import imdb
 from .imdb import ROOT_DIR
 from . import ds_utils
-from .voc_eval import voc_eval
+from .kitti_eval import kitti_eval
 
 # TODO: make fast_rcnn irrelevant
 # >>>> obsolete, because it depends on sth outside of this project
@@ -68,7 +68,8 @@ class kitti(imdb):
                        'use_diff': True,
                        'matlab_eval': False,
                        'rpn_file': None,
-                       'min_size': 2}
+                       'min_size': 2,
+                       'objdiff': 2}
 
         assert os.path.exists(self._devkit_path), \
             'VOCdevkit path does not exist: {}'.format(self._devkit_path)
@@ -165,17 +166,6 @@ class kitti(imdb):
         filename = os.path.join(self._data_path, 'Annotations', index + '.xml')
         tree = ET.parse(filename)
         objs = tree.findall('object')
-        if not self.config['use_diff']:
-            print('Not use diff')
-            raw_input('Please enter to continue')
-            # Exclude the samples labeled as difficult
-            non_diff_objs = [
-                obj for obj in objs if int(obj.find('difficult').text) == 0]
-            # if len(non_diff_objs) != len(objs):
-            #     print 'Removed {} difficult objects'.format(
-            #         len(objs) - len(non_diff_objs))
-            objs = non_diff_objs
-
         if self._cls_skip:
             # raw_input('Skip obj, please enter to continue')
             non_skip_objs = [
@@ -281,9 +271,9 @@ class kitti(imdb):
             if cls == 'Car':
                 cls_ovthresh = 0.7
             filename = self._get_voc_results_file_template().format(cls)
-            rec, prec, ap = voc_eval(
+            rec, prec, ap = kitti_eval(
                 filename, annopath, imagesetfile, cls, cachedir, ovthresh=cls_ovthresh,
-                use_07_metric=use_07_metric)
+                use_07_metric=use_07_metric, objdiff=self.config['objdiff'])
             aps += [ap]
             print('AP for {} = {:.6f}'.format(cls, ap))
             with open(os.path.join(output_dir, cls + '_pr.pkl'), 'wb') as f:
@@ -312,7 +302,7 @@ class kitti(imdb):
         cmd = 'cd {} && '.format(path)
         cmd += '{:s} -nodisplay -nodesktop '.format(cfg.MATLAB)
         cmd += '-r "dbstop if error; '
-        cmd += 'voc_eval(\'{:s}\',\'{:s}\',\'{:s}\',\'{:s}\'); quit;"' \
+        cmd += 'kitti_eval(\'{:s}\',\'{:s}\',\'{:s}\',\'{:s}\'); quit;"' \
             .format(self._devkit_path, self._get_comp_id(),
                     self._image_set, output_dir)
         print('Running:\n{}'.format(cmd))
