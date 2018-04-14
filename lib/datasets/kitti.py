@@ -277,9 +277,12 @@ class kitti(imdb):
         for i, cls in enumerate(self._classes):
             if cls == '__background__':
                 continue
+            cls_ovthresh = 0.5
+            if cls == 'Car':
+                cls_ovthresh = 0.7
             filename = self._get_voc_results_file_template().format(cls)
             rec, prec, ap = voc_eval(
-                filename, annopath, imagesetfile, cls, cachedir, ovthresh=0.5,
+                filename, annopath, imagesetfile, cls, cachedir, ovthresh=cls_ovthresh,
                 use_07_metric=use_07_metric)
             aps += [ap]
             print('AP for {} = {:.6f}'.format(cls, ap))
