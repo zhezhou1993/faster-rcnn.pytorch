@@ -37,8 +37,8 @@ class alexnet(_fasterRCNN):
 		# not using the last maxpool layer
 		self.RCNN_base = nn.Sequential(*list(alexnet.features._modules.values())[:-1])
 
-		# Fix the layers before conv4:
-		for layer in range(9):
+		# Fix the layers before conv2:
+		for layer in range(3):
 			for p in self.RCNN_base[layer].parameters(): p.requires_grad = False
 
 		self.RCNN_top = alexnet.classifier
