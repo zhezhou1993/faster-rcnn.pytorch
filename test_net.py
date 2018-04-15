@@ -158,9 +158,6 @@ if __name__ == '__main__':
   imdb, roidb, ratio_list, ratio_index = combined_roidb(args.imdbval_name, False)
   imdb.competition_mode(on=True)
 
-  caffe_pretrain=False
-  if not caffe_pretrain:
-      cfg.PIXEL_MEANS = np.array([[[0, 0, 0]]])
   print('{:d} roidb entries'.format(len(roidb)))
 
   input_dir = args.load_dir + "/" + args.net + "/" + args.dataset
@@ -241,7 +238,9 @@ if __name__ == '__main__':
                for _ in xrange(imdb.num_classes)]
 
   output_dir = get_output_dir(imdb, save_name)
+  caffe_pretrain=False
   if not caffe_pretrain:
+    cfg.PIXEL_MEANS = np.array([[[0, 0, 0]]])
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                   std=[0.229, 0.224, 0.225])
   else:
