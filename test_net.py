@@ -167,8 +167,17 @@ if __name__ == '__main__':
     'faster_rcnn_{}_{}_{}.pth'.format(args.checksession, args.checkepoch, args.checkpoint))
 
   # initilize the network here.
-  if args.net == 'vgg16':
-    fasterRCNN = vgg16(imdb.classes, pretrained=False, class_agnostic=args.class_agnostic)
+  if args.net == 'alexnet':
+    fasterRCNN = alexnet(imdb.classes, pretrained=False, class_agnostic=args.class_agnostic)
+  elif args.net == 'vgg11':
+    fasterRCNN = vgg(imdb.classes, 11, pretrained=False, class_agnostic=args.class_agnostic)
+  elif args.net == 'vgg13':
+    fasterRCNN = vgg(imdb.classes, 13, pretrained=False, class_agnostic=args.class_agnostic)
+  elif args.net == 'vgg16':
+    # fasterRCNN = vgg16(imdb.classes, pretrained=False, class_agnostic=args.class_agnostic)
+    fasterRCNN = vgg(imdb.classes, 16, pretrained=False, class_agnostic=args.class_agnostic)
+  elif args.net == 'vgg19':
+    fasterRCNN = vgg(imdb.classes, 19, pretrained=False, class_agnostic=args.class_agnostic)
   elif args.net == 'res101':
     fasterRCNN = resnet(imdb.classes, 101, pretrained=False, class_agnostic=args.class_agnostic)
   elif args.net == 'res50':
