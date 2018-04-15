@@ -33,6 +33,7 @@ from model.utils.net_utils import weights_normal_init, save_net, load_net, \
 # from model.faster_rcnn.vgg16 import vgg16
 from model.faster_rcnn.vgg import vgg
 from model.faster_rcnn.resnet import resnet
+from model.faster_rcnn.alexnet import alexnet
 
 def parse_args():
   """
@@ -258,7 +259,9 @@ if __name__ == '__main__':
     cfg.CUDA = True
 
   # initilize the network here.
-  if args.net == 'vgg11':
+  if args.net == 'alexnet':
+    fasterRCNN = alexnet(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
+  elif args.net == 'vgg11':
     fasterRCNN = vgg(imdb.classes, 11, pretrained=True, class_agnostic=args.class_agnostic)
   elif args.net == 'vgg13':
     fasterRCNN = vgg(imdb.classes, 13, pretrained=True, class_agnostic=args.class_agnostic)
@@ -274,8 +277,7 @@ if __name__ == '__main__':
   elif args.net == 'res152':
     fasterRCNN = resnet(imdb.classes, 152, pretrained=True, class_agnostic=args.class_agnostic)
   else:
-    print("network is not defined")
-    pdb.set_trace()
+    raise Exception("network is not defined")
 
   fasterRCNN.create_architecture()
 

@@ -187,8 +187,7 @@ if __name__ == '__main__':
   elif args.net == 'res152':
     fasterRCNN = resnet(pascal_classes, 152, pretrained=False, class_agnostic=args.class_agnostic)
   else:
-    print("network is not defined")
-    pdb.set_trace()
+    raise Exception("network is not defined")
 
   fasterRCNN.create_architecture()
 
