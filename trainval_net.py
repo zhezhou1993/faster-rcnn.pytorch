@@ -403,7 +403,7 @@ if __name__ == '__main__':
         loss_temp = 0
         start = time.time()
 
-    if epoch % args.checkpoint_interval == 0 or epoch == args.max_epochs:
+    if (epoch % args.checkpoint_interval == 0) or (epoch == args.max_epochs):
       if args.mGPUs:
         save_name = os.path.join(output_dir, 'faster_rcnn_{}_{}_{}.pth'.format(args.session, epoch, step))
         save_checkpoint({
