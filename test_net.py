@@ -97,6 +97,8 @@ def parse_args():
                       help='classifier threshold')
   parser.add_argument('--max_boxes', default=0, type=int,
                       help='max_per_image detections *over all classes*')
+  parser.add_argument('--txt', help='save detection to txt',
+                      action='store_true')
   args = parser.parse_args()
   return args
 
@@ -256,7 +258,7 @@ if __name__ == '__main__':
 
   _t = {'im_detect': time.time(), 'misc': time.time()}
   det_file = os.path.join(output_dir, 'detections.pkl')
-  if not os.path.exists(output_dir+'/txt/'):
+  if not os.path.exists(output_dir+'/txt/') and args.txt:
     os.makedirs(output_dir+'/txt/')
 
   fasterRCNN.eval()
@@ -339,18 +341,20 @@ if __name__ == '__main__':
               for j in xrange(1, imdb.num_classes):
                   keep = np.where(all_boxes[j][i][:, -1] >= image_thresh)[0]
                   all_boxes[j][i] = all_boxes[j][i][keep, :]
-                  outpath = '{}/txt/density_{}_{}.txt'.format(output_dir, imdb.image_index[i], imdb.classes[j])
-                  out_data = all_boxes[j][i]
-                  # [xmin ymin xmax ymax score] to [ymin xmin ymax xmax score]
-                  np.savetxt(outpath, out_data[:, [1,0,3,2,4]], fmt='%d %d %d %d %.3f')
+                  if args.txt:
+                    outpath = '{}/txt/density_{}_{}.txt'.format(output_dir, imdb.image_index[i], imdb.classes[j])
+                    out_data = all_boxes[j][i]
+                    # [xmin ymin xmax ymax score] to [ymin xmin ymax xmax score]
+                    np.savetxt(outpath, out_data[:, [1,0,3,2,4]], fmt='%d %d %d %d %.3f')
       else:
           for j in xrange(1, imdb.num_classes):
               keep = np.where(all_boxes[j][i][:, -1] >= args.cls_thresh)[0]
               all_boxes[j][i] = all_boxes[j][i][keep, :]
-              outpath = '{}/txt/density_{}_{}.txt'.format(output_dir, imdb.image_index[i], imdb.classes[j])
-              out_data = all_boxes[j][i]
-              # [xmin ymin xmax ymax score] to [ymin xmin ymax xmax score]
-              np.savetxt(outpath, out_data[:, [1,0,3,2,4]], fmt='%d %d %d %d %.3f')
+              if args.txt:
+                outpath = '{}/txt/density_{}_{}.txt'.format(output_dir, imdb.image_index[i], imdb.classes[j])
+                out_data = all_boxes[j][i]
+                # [xmin ymin xmax ymax score] to [ymin xmin ymax xmax score]
+                np.savetxt(outpath, out_data[:, [1,0,3,2,4]], fmt='%d %d %d %d %.3f')
 
       misc_toc = time.time()
       nms_time = misc_toc - misc_tic
