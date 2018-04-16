@@ -3,5 +3,5 @@ cffi
 opencv-python
 scipy
 easydict
-matplotlib
+matplotlib==2.0.2
 pyyaml
