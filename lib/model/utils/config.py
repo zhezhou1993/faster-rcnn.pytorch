@@ -159,7 +159,7 @@ __C.TRAIN.USE_ALL_GT = True
 __C.TRAIN.BN_TRAIN = False
 
 # ratio rank for training image cropping
-__C.TRAIN.RATIO_LARGE = 2
+__C.TRAIN.RATIO_LARGE = 2.0
 __C.TRAIN.RATIO_SMALL = 0.5
 
 #
