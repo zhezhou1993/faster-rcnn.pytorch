@@ -158,6 +158,10 @@ __C.TRAIN.USE_ALL_GT = True
 # Whether to tune the batch normalization parameters during training
 __C.TRAIN.BN_TRAIN = False
 
+# ratio rank for training image cropping
+__C.TRAIN.RATIO_LARGE = 2
+__C.TRAIN.RATIO_SMALL = 0.5
+
 #
 # Testing options
 #
