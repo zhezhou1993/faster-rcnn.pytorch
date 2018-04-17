@@ -57,7 +57,6 @@ def parse_args():
     parser.add_argument('--vis', dest='vis',
                         help='visualization mode',
                         action='store_true')
-    args = parser.parse_args()
 
     # Training options
     parser.add_argument('--start_epoch', dest='start_epoch',
@@ -110,6 +109,7 @@ def parse_args():
     parser.add_argument('--webcam_num', dest='webcam_num',
                         help='webcam ID number',
                         default=-1, type=int)
+    args = parser.parse_args()
 
     # dataset
     if args.dataset == "progress":
