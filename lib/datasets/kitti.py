@@ -45,14 +45,20 @@ class kitti(imdb):
             else devkit_path
         self._data_path = os.path.join(self._devkit_path, 'KITTI_VOC')
         self._classes = ('__background__', # always index 0
-                         'Car', 'Pedestrian', 'Cyclist')
+                         'Car')
         self._cls_dict = {'Van': 'Car',
                           'Truck': 'Car',
-                          'Person_sitting': 'Pedestrian',
-                          'Car': 'Car',
-                          'Pedestrian': 'Pedestrian',
-                          'Cyclist': 'Cyclist'}
-        self._cls_skip = ['Misc', 'DontCare', 'Tram']
+                          'Car': 'Car'}
+        self._cls_skip = ['Cyclist', 'Pedestrian', 'Person_sitting', 'Misc', 'DontCare', 'Tram']
+        # self._classes = ('__background__', # always index 0
+        #                  'Car', 'Pedestrian', 'Cyclist')
+        # self._cls_dict = {'Van': 'Car',
+        #                   'Truck': 'Car',
+        #                   'Person_sitting': 'Pedestrian',
+        #                   'Car': 'Car',
+        #                   'Pedestrian': 'Pedestrian',
+        #                   'Cyclist': 'Cyclist'}
+        # self._cls_skip = ['Misc', 'DontCare', 'Tram']
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
         self._image_ext = '.png'
         self._image_index = self._load_image_set_index()
