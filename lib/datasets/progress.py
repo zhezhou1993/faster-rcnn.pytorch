@@ -281,16 +281,17 @@ class progress(imdb):
                                        dets[k, 2], dets[k, 3]))
 
     def _do_python_eval(self, output_dir='output'):
+        dataset = 'progress'
         annopath = os.path.join(
             self._devkit_path,
             #'VOC' + self._year,
-			'progress/'
+			dataset+'/'
             'Annotations',
             '{:s}.xml')
         imagesetfile = os.path.join(
             self._devkit_path,
             #'VOC' + self._year,
-			'progress/',
+			dataset+'/',
             'ImageSets',
             'Main',
             self._image_set + '.txt')
@@ -306,7 +307,7 @@ class progress(imdb):
                 continue
             filename = self._get_voc_results_file_template().format(cls)
             rec, prec, ap = voc_eval(
-                filename, annopath, imagesetfile, cls, cachedir, ovthresh=0.5,
+                filename, annopath, imagesetfile, cls, cachedir, dataset, ovthresh=0.5,
                 use_07_metric=use_07_metric)
             aps += [ap]
             print('AP for {} = {:.6f}'.format(cls, ap))
