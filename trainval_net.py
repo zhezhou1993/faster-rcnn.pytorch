@@ -135,7 +135,7 @@ if __name__ == '__main__':
   if args.cuda:
     cfg.CUDA = True
 
-  fasterRCNN = init_net(True, args)
+  fasterRCNN = init_net(True, imdb.classes, args)
   lr = cfg.TRAIN.LEARNING_RATE
   lr = args.lr
   #tr_momentum = cfg.TRAIN.MOMENTUM

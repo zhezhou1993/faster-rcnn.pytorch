@@ -70,7 +70,7 @@ if __name__ == '__main__':
   load_name = os.path.join(input_dir,
     'faster_rcnn_{}_{}_{}.pth'.format(args.checksession, args.checkepoch, args.checkpoint))
 
-  fasterRCNN = init_net(False, args)
+  fasterRCNN = init_net(False, imdb.classes, args)
 
   print("load checkpoint %s" % (load_name))
   checkpoint = torch.load(load_name)
