@@ -32,78 +32,15 @@ from model.nms.nms_wrapper import nms
 from model.rpn.bbox_transform import bbox_transform_inv
 from model.utils.net_utils import save_net, load_net, vis_detections
 from model.utils.blob import im_list_to_blob
-from model.faster_rcnn.vgg16 import vgg16
-from model.faster_rcnn.resnet import resnet
 import pdb
+from options import parse_args
+from net_opts import init_net
 
 try:
     xrange          # Python 2
 except NameError:
     xrange = range  # Python 3
 
-
-def parse_args():
-  """
-  Parse input arguments
-  """
-  parser = argparse.ArgumentParser(description='Train a Fast R-CNN network')
-  parser.add_argument('--dataset', dest='dataset',
-                      help='training dataset',
-                      default='pascal_voc', type=str)
-  parser.add_argument('--cfg', dest='cfg_file',
-                      help='optional config file',
-                      default='cfgs/vgg16.yml', type=str)
-  parser.add_argument('--net', dest='net',
-                      help='vgg16, res50, res101, res152',
-                      default='res101', type=str)
-  parser.add_argument('--set', dest='set_cfgs',
-                      help='set config keys', default=None,
-                      nargs=argparse.REMAINDER)
-  parser.add_argument('--load_dir', dest='load_dir',
-                      help='directory to load models',
-                      default="data/models")
-  parser.add_argument('--image_dir', dest='image_dir',
-                      help='directory to load images for demo',
-                      default="images")
-  parser.add_argument('--cuda', dest='cuda',
-                      help='whether use CUDA',
-                      action='store_true')
-  parser.add_argument('--mGPUs', dest='mGPUs',
-                      help='whether use multiple GPUs',
-                      action='store_true')
-  parser.add_argument('--cag', dest='class_agnostic',
-                      help='whether perform class_agnostic bbox regression',
-                      action='store_true')
-  parser.add_argument('--parallel_type', dest='parallel_type',
-                      help='which part of model to parallel, 0: all, 1: model before roi pooling',
-                      default=0, type=int)
-  parser.add_argument('--checksession', dest='checksession',
-                      help='checksession to load model',
-                      default=1, type=int)
-  parser.add_argument('--checkepoch', dest='checkepoch',
-                      help='checkepoch to load network',
-                      default=1, type=int)
-  parser.add_argument('--checkpoint', dest='checkpoint',
-                      help='checkpoint to load network',
-                      default=10021, type=int)
-  parser.add_argument('--bs', dest='batch_size',
-                      help='batch_size',
-                      default=1, type=int)
-  parser.add_argument('--vis', dest='vis',
-                      help='visualization mode',
-                      action='store_true')
-  parser.add_argument('--webcam_num', dest='webcam_num',
-                      help='webcam ID number',
-                      default=-1, type=int)
-  parser.add_argument('--cls_thresh', default=0.5, type=float,
-                      help='classifier threshold')
-
-  args = parser.parse_args()
-  return args
-
-lr = cfg.TRAIN.LEARNING_RATE
-momentum = cfg.TRAIN.MOMENTUM
-weight_decay = cfg.TRAIN.WEIGHT_DECAY
 
 def _get_image_blob(im):
   """Converts an image into a network input.
@@ -177,19 +114,7 @@ if __name__ == '__main__':
                          'toy', 'detergent', 'scotch_brite', 'coke',
                          'blue_cup', 'ranch'])
 
-  # initilize the network here.
-  if args.net == 'vgg16':
-    fasterRCNN = vgg16(pascal_classes, pretrained=False, class_agnostic=args.class_agnostic)
-  elif args.net == 'res101':
-    fasterRCNN = resnet(pascal_classes, 101, pretrained=False, class_agnostic=args.class_agnostic)
-  elif args.net == 'res50':
-    fasterRCNN = resnet(pascal_classes, 50, pretrained=False, class_agnostic=args.class_agnostic)
-  elif args.net == 'res152':
-    fasterRCNN = resnet(pascal_classes, 152, pretrained=False, class_agnostic=args.class_agnostic)
-  else:
-    raise Exception("network is not defined")
-
-  fasterRCNN.create_architecture()
+  fasterRCNN = init_net(False, args)
 
   print("load checkpoint %s" % (load_name))
   checkpoint = torch.load(load_name)

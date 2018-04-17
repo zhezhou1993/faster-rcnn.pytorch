@@ -29,12 +29,8 @@ from model.utils.config import cfg, cfg_from_file, cfg_from_list, get_output_dir
 from model.utils.net_utils import weights_normal_init, save_net, load_net, \
       adjust_learning_rate, save_checkpoint, clip_gradient
 
-# from model.faster_rcnn.vgg16 import vgg16
-from model.faster_rcnn.vgg import vgg
-from model.faster_rcnn.resnet import resnet
-from model.faster_rcnn.alexnet import alexnet
-
 from options import parse_args
+from net_opts import init_net
 
 class sampler(Sampler):
   def __init__(self, train_size, batch_size):
@@ -139,33 +135,7 @@ if __name__ == '__main__':
   if args.cuda:
     cfg.CUDA = True
 
-  # initilize the network here.
-  if args.net == 'alexnet':
-    fasterRCNN = alexnet(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
-  elif args.net == 'vgg11':
-    fasterRCNN = vgg(imdb.classes, 11, pretrained=True, class_agnostic=args.class_agnostic)
-  elif args.net == 'vgg13':
-    fasterRCNN = vgg(imdb.classes, 13, pretrained=True, class_agnostic=args.class_agnostic)
-  elif args.net == 'vgg16':
-    # fasterRCNN = vgg16(imdb.classes, pretrained=True, class_agnostic=args.class_agnostic)
-    fasterRCNN = vgg(imdb.classes, 16, pretrained=True, class_agnostic=args.class_agnostic)
-  elif args.net == 'vgg19':
-    fasterRCNN = vgg(imdb.classes, 19, pretrained=True, class_agnostic=args.class_agnostic)
-  elif args.net == 'res101':
-    fasterRCNN = resnet(imdb.classes, 101, pretrained=True, class_agnostic=args.class_agnostic)
-  elif args.net == 'res50':
-    fasterRCNN = resnet(imdb.classes, 50, pretrained=True, class_agnostic=args.class_agnostic)
-  elif args.net == 'res152':
-    fasterRCNN = resnet(imdb.classes, 152, pretrained=True, class_agnostic=args.class_agnostic)
-  elif args.net == 'res18':
-    fasterRCNN = resnet(imdb.classes, 18, pretrained=True, class_agnostic=args.class_agnostic)
-  elif args.net == 'res34':
-    fasterRCNN = resnet(imdb.classes, 34, pretrained=True, class_agnostic=args.class_agnostic)
-  else:
-    raise Exception("network is not defined")
-
-  fasterRCNN.create_architecture()
-
+  fasterRCNN = init_net(True, args)
   lr = cfg.TRAIN.LEARNING_RATE
   lr = args.lr
   #tr_momentum = cfg.TRAIN.MOMENTUM

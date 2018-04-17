@@ -106,6 +106,10 @@ def parse_args():
     parser.add_argument('--use_tfboard', dest='use_tfboard',
                         help='whether use tensorflow tensorboard',
                         action='store_true')
+    # web demo
+    parser.add_argument('--webcam_num', dest='webcam_num',
+                        help='webcam ID number',
+                        default=-1, type=int)
 
     # dataset
     if args.dataset == "progress":
