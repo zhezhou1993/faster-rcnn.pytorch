@@ -52,6 +52,7 @@ def _get_image_blob(im):
       in the image pyramid
   """
   im_orig = im.astype(np.float32, copy=True)
+  # FIXME: pytorch mean
   im_orig -= cfg.PIXEL_MEANS
 
   im_shape = im_orig.shape
@@ -225,6 +226,7 @@ if __name__ == '__main__':
           box_deltas = bbox_pred.data
           if cfg.TRAIN.BBOX_NORMALIZE_TARGETS_PRECOMPUTED:
           # Optionally normalize targets by a precomputed mean and stdev
+          # FIXME: pytorch normalize
             if args.class_agnostic:
                 box_deltas = box_deltas.view(-1, 4) * torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_STDS).cuda() \
                            + torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_MEANS).cuda()
