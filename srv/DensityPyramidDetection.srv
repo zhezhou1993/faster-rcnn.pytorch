@@ -1,0 +1,4 @@
+sensor_msgs/Image image
+std_msgs/String scene_name
+---
+bool success
