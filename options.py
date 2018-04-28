@@ -2,6 +2,7 @@
 import arguments
 """
 import argparse
+import numpy as np
 
 
 def parse_args():
@@ -157,5 +158,25 @@ def parse_args():
             args.net) if args.large_scale else "cfgs/{}.yml".format(args.net)
     else:
         args.cfg_file = "cfgs/{}.yml".format(args.cfg_file)
+
+    # classes
+    if args.dataset == 'progress':
+        args.classes = np.asarray(['__background__',  # always index 0
+                                   'tide', 'spray_bottle', 'waterpot', 'sugar',
+                                   'red_bowl', 'clorox', 'sunscreen', 'downy', 'salt',
+                                   'toy', 'detergent', 'scotch_brite', 'coke',
+                                   'blue_cup', 'ranch'])
+    elif args.dataset == 'kitti':
+        args.classes = np.asarray(['__background__',  # always index 0
+                                   'car'])
+    elif args.dataset == 'pascal_voc':
+        args.classes = np.asarray(['__background__',
+                                   'aeroplane', 'bicycle', 'bird', 'boat',
+                                   'bottle', 'bus', 'car', 'cat', 'chair',
+                                   'cow', 'diningtable', 'dog', 'horse',
+                                   'motorbike', 'person', 'pottedplant',
+                                   'sheep', 'sofa', 'train', 'tvmonitor'])
+    else:
+        args.classes = np.asarray(['__background__'])
 
     return args

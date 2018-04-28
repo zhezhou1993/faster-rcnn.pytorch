@@ -95,13 +95,7 @@ if __name__ == '__main__':
     load_name = os.path.join(input_dir,
                              'faster_rcnn_{}_{}_{}.pth'.format(args.checksession, args.checkepoch, args.checkpoint))
 
-    classes = np.asarray(['__background__',  # always index 0
-                          'tide', 'spray_bottle', 'waterpot', 'sugar',
-                          'red_bowl', 'clorox', 'sunscreen', 'downy', 'salt',
-                          'toy', 'detergent', 'scotch_brite', 'coke',
-                          'blue_cup', 'ranch'])
-
-    fasterRCNN = init_net(False, classes, args)
+    fasterRCNN = init_net(False, args.classes, args)
 
     print("load checkpoint %s" % (load_name))
     checkpoint = torch.load(load_name)
@@ -133,10 +127,10 @@ if __name__ == '__main__':
     fasterRCNN.eval()
 
     start = time.time()
-    max_per_image = 100
     vis = True
 
-    imglist = [f for f in os.listdir(args.image_dir) if f.endswith(".jpg")]
+    imglist = [f for f in os.listdir(args.image_dir) if f.endswith(
+        ".jpg") or f.endswith(".png")]
     num_images = len(imglist)
 
     print('Loaded Photo: {} images.'.format(num_images))
@@ -162,8 +156,9 @@ if __name__ == '__main__':
         # transform to pytorch image
         im_data_pt = torch.from_numpy(im_blob)
         ih, iw = im_data_pt.size(1), im_data_pt.size(2)
-        im_data_pt = im_data_pt.permute(0, 3, 1, 2).contiguous().view(3, ih, iw)
-        im_data_pt = normalize(im_data_pt.div(255)) # normalize img
+        im_data_pt = im_data_pt.permute(
+            0, 3, 1, 2).contiguous().view(3, ih, iw)
+        im_data_pt = normalize(im_data_pt.div(255))  # normalize img
         im_data_pt = im_data_pt.unsqueeze(0)
 
         im_info_pt = torch.from_numpy(im_info_np)
@@ -192,7 +187,7 @@ if __name__ == '__main__':
                 box_deltas = box_deltas.view(-1, 4) * torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_STDS).cuda() \
                     + torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_MEANS).cuda()
                 box_deltas = box_deltas.view(
-                    1, -1, 4 * len(classes))
+                    1, -1, 4 * len(args.classes))
 
             pred_boxes = bbox_transform_inv(boxes, box_deltas, 1)
             pred_boxes = clip_boxes(pred_boxes, im_info.data, 1)
@@ -208,8 +203,8 @@ if __name__ == '__main__':
         detect_time = det_toc - det_tic
         misc_tic = time.time()
         if vis:
-            im2show = np.copy(im[:, :, ::-1]) # rgb -> bgr for save
-        for j in xrange(1, len(classes)):
+            im2show = np.copy(im[:, :, ::-1])  # rgb -> bgr for save
+        for j in xrange(1, len(args.classes)):
             inds = torch.nonzero(scores[:, j] > args.cls_thresh).view(-1)
             # if there is det
             if inds.numel() > 0:
@@ -225,7 +220,7 @@ if __name__ == '__main__':
                 cls_dets = cls_dets[keep.view(-1).long()]
                 if vis:
                     im2show = vis_detections(
-                        im2show, classes[j], cls_dets.cpu().numpy(), args.cls_thresh)
+                        im2show, args.classes[j], cls_dets.cpu().numpy(), args.cls_thresh)
 
         misc_toc = time.time()
         nms_time = misc_toc - misc_tic
