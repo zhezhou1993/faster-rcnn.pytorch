@@ -43,13 +43,14 @@ class kitti(imdb):
         self._image_set = image_set
         self._devkit_path = self._get_default_path() if devkit_path is None \
             else devkit_path
-        self._data_path = os.path.join(self._devkit_path, 'KITTI_VOC')
-        self._classes = ('__background__', # always index 0
+        self._data_path = os.path.join(self._devkit_path, 'kitti')
+        self._classes = ('__background__',  # always index 0
                          'Car')
         self._cls_dict = {'Van': 'Car',
                           'Truck': 'Car',
                           'Car': 'Car'}
-        self._cls_skip = ['Cyclist', 'Pedestrian', 'Person_sitting', 'Misc', 'DontCare', 'Tram']
+        self._cls_skip = ['Cyclist', 'Pedestrian',
+                          'Person_sitting', 'Misc', 'DontCare', 'Tram']
         # self._classes = ('__background__', # always index 0
         #                  'Car', 'Pedestrian', 'Cyclist')
         # self._cls_dict = {'Van': 'Car',
@@ -175,7 +176,7 @@ class kitti(imdb):
         if self._cls_skip:
             # raw_input('Skip obj, please enter to continue')
             non_skip_objs = [
-                obj for obj in objs \
+                obj for obj in objs
                 if (obj.find('name').text.strip() not in self._cls_skip)]
             if len(non_skip_objs) != len(objs):
                 print('Removed {} skip objects'.format(
@@ -226,7 +227,8 @@ class kitti(imdb):
 
     def _get_voc_results_file_template(self):
         # VOCdevkit/results/VOC2007/Main/<comp_id>_det_test_aeroplane.txt
-        filename = self._get_comp_id() + '_det_' + self._image_set + '_{:s}.txt'
+        filename = self._get_comp_id() + '_det_' + \
+            self._image_set + '_{:s}.txt'
         filedir = os.path.join(self._devkit_path, 'results', 'kitti', 'Main')
         if not os.path.exists(filedir):
             os.makedirs(filedir)
@@ -254,12 +256,12 @@ class kitti(imdb):
     def _do_python_eval(self, output_dir='output'):
         annopath = os.path.join(
             self._devkit_path,
-			'KITTI_VOC/'
+            'kitti/'
             'Annotations',
             '{:s}.xml')
         imagesetfile = os.path.join(
             self._devkit_path,
-			'KITTI_VOC/',
+            'kitti/',
             'ImageSets',
             'Main',
             self._image_set + '.txt')

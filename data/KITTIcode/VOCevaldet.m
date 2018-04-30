@@ -78,11 +78,10 @@ for d=1:nd
     end
     % assign detection as true positive/don't care/false positive
     if ovmax>=VOCopts.minoverlap
-        disp(gt(i).diff(jmax))
         if ~gt(i).diff(jmax)
             if ~gt(i).det(jmax)
                 tp(d)=1;            % true positive
-                gt(i).det(jmax)=true;
+		gt(i).det(jmax)=true;
             else
                 fp(d)=1;            % false positive (multiple detection)
             end
