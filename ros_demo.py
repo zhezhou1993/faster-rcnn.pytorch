@@ -7,7 +7,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from faster_rcnn_object_detector.srv import *    
+from faster_rcnn_object_detector.srv import *
 from faster_rcnn_object_detector.msg import *
 import rospy
 
@@ -148,32 +148,32 @@ def _get_image_blob(im):
 
 def image_process_bbox_with_nms(im):
   resp = ImageToBBoxResponse()
-    
+
   blobs, im_scales = _get_image_blob(im)
   assert len(im_scales) == 1, "Only single-image batch implemented"
   im_blob = blobs
   im_info_np = np.array([[im_blob.shape[1], im_blob.shape[2], im_scales[0]]], dtype=np.float32)
-  
+
   im_data_pt = torch.from_numpy(im_blob)
   im_data_pt = im_data_pt.permute(0, 3, 1, 2)
   im_info_pt = torch.from_numpy(im_info_np)
-  
+
   im_data.data.resize_(im_data_pt.size()).copy_(im_data_pt)
   im_info.data.resize_(im_info_pt.size()).copy_(im_info_pt)
   gt_boxes.data.resize_(1, 1, 5).zero_()
   num_boxes.data.resize_(1).zero_()
-  
+
   # pdb.set_trace()
   det_tic = time.time()
-  
+
   rois, cls_prob, bbox_pred, \
   rpn_loss_cls, rpn_loss_box, \
   RCNN_loss_cls, RCNN_loss_bbox, \
   rois_label = fasterRCNN(im_data, im_info, gt_boxes, num_boxes)
-  
+
   scores = cls_prob.data
   boxes = rois.data[:, :, 1:5]
-  
+
   if cfg.TEST.BBOX_REG:
      # Apply bounding-box regression deltas
      box_deltas = bbox_pred.data
@@ -187,15 +187,15 @@ def image_process_bbox_with_nms(im):
            box_deltas = box_deltas.view(-1, 4) * torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_STDS).cuda() \
                       + torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_MEANS).cuda()
            box_deltas = box_deltas.view(1, -1, 4 * len(pascal_classes))
-  
+
      pred_boxes = bbox_transform_inv(boxes, box_deltas, 1)
      pred_boxes = clip_boxes(pred_boxes, im_info.data, 1)
   else:
      # Simply repeat the boxes, once for each class
      pred_boxes = np.tile(boxes, (1, scores.shape[1]))
-  
+
   pred_boxes /= im_scales[0]
-  
+
   scores = scores.squeeze()
   pred_boxes = pred_boxes.squeeze()
   det_toc = time.time()
@@ -215,7 +215,7 @@ def image_process_bbox_with_nms(im):
          cls_boxes = pred_boxes[inds, :]
        else:
          cls_boxes = pred_boxes[inds][:, j * 4:(j + 1) * 4]
-       
+
        cls_dets = torch.cat((cls_boxes, cls_scores.unsqueeze(1)), 1)
        # cls_dets = torch.cat((cls_boxes, cls_scores), 1)
        cls_dets = cls_dets[order]
@@ -225,11 +225,11 @@ def image_process_bbox_with_nms(im):
        all_scores = all_scores[keep.view(-1).long()]
        if vis:
          im2show = vis_detections(im2show, pascal_classes[j], cls_dets.cpu().numpy(), args.cls_thresh)
-         
+
        dets = cls_dets.cpu().numpy()
        class_name = pascal_classes[j]
-    
-       Object = ObjectInfo()   
+
+       Object = ObjectInfo()
        Object.label = class_name
        Object.all_label = pascal_classes[1:]
        for i in range(np.minimum(10, dets.shape[0])):
@@ -245,15 +245,15 @@ def image_process_bbox_with_nms(im):
            BBox.score = all_scores[i,:].tolist()
            BBox.max_label = class_name
            BBox.max_score = score
-           
+
            resp.bbox.append(BBox)
-  
+
   misc_toc = time.time()
   nms_time = misc_toc - misc_tic
-  
+
   #cv2.imshow('test', im2show)
-  #cv2.waitKey(0)  
-  
+  #cv2.waitKey(0)
+
   sys.stdout.write('im_detect: {:.3f}s {:.3f}s   \r' \
                     .format(detect_time, nms_time))
   sys.stdout.flush()
@@ -263,32 +263,32 @@ def image_process_bbox_with_nms(im):
 
 def image_process(im):
   resp = ImageToObjectResponse()
-    
+
   blobs, im_scales = _get_image_blob(im)
   assert len(im_scales) == 1, "Only single-image batch implemented"
   im_blob = blobs
   im_info_np = np.array([[im_blob.shape[1], im_blob.shape[2], im_scales[0]]], dtype=np.float32)
-  
+
   im_data_pt = torch.from_numpy(im_blob)
   im_data_pt = im_data_pt.permute(0, 3, 1, 2)
   im_info_pt = torch.from_numpy(im_info_np)
-  
+
   im_data.data.resize_(im_data_pt.size()).copy_(im_data_pt)
   im_info.data.resize_(im_info_pt.size()).copy_(im_info_pt)
   gt_boxes.data.resize_(1, 1, 5).zero_()
   num_boxes.data.resize_(1).zero_()
-  
+
   # pdb.set_trace()
   det_tic = time.time()
-  
+
   rois, cls_prob, bbox_pred, \
   rpn_loss_cls, rpn_loss_box, \
   RCNN_loss_cls, RCNN_loss_bbox, \
   rois_label = fasterRCNN(im_data, im_info, gt_boxes, num_boxes)
-  
+
   scores = cls_prob.data
   boxes = rois.data[:, :, 1:5]
-  
+
   if cfg.TEST.BBOX_REG:
      # Apply bounding-box regression deltas
      box_deltas = bbox_pred.data
@@ -302,15 +302,15 @@ def image_process(im):
            box_deltas = box_deltas.view(-1, 4) * torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_STDS).cuda() \
                       + torch.FloatTensor(cfg.TRAIN.BBOX_NORMALIZE_MEANS).cuda()
            box_deltas = box_deltas.view(1, -1, 4 * len(pascal_classes))
-  
+
      pred_boxes = bbox_transform_inv(boxes, box_deltas, 1)
      pred_boxes = clip_boxes(pred_boxes, im_info.data, 1)
   else:
      # Simply repeat the boxes, once for each class
      pred_boxes = np.tile(boxes, (1, scores.shape[1]))
-  
+
   pred_boxes /= im_scales[0]
-  
+
   scores = scores.squeeze()
   pred_boxes = pred_boxes.squeeze()
   det_toc = time.time()
@@ -328,7 +328,7 @@ def image_process(im):
          cls_boxes = pred_boxes[inds, :]
        else:
          cls_boxes = pred_boxes[inds][:, j * 4:(j + 1) * 4]
-       
+
        cls_dets = torch.cat((cls_boxes, cls_scores.unsqueeze(1)), 1)
        # cls_dets = torch.cat((cls_boxes, cls_scores), 1)
        cls_dets = cls_dets[order]
@@ -336,11 +336,11 @@ def image_process(im):
        cls_dets = cls_dets[keep.view(-1).long()]
        if vis:
          im2show = vis_detections(im2show, pascal_classes[j], cls_dets.cpu().numpy(), args.cls_thresh)
-         
+
        dets = cls_dets.cpu().numpy()
        class_name = pascal_classes[j]
-    
-       Object = ObjectInfo()   
+
+       Object = ObjectInfo()
        Object.label = class_name
        Object.all_label = pascal_classes[1:]
        for i in range(np.minimum(10, dets.shape[0])):
@@ -352,15 +352,15 @@ def image_process(im):
            Object.bbox_xmax.append(int(bbox[2]))
            Object.bbox_ymax.append(int(bbox[3]))
            Object.score.append(score)
-           
+
        resp.objects.append(Object)
-  
+
   misc_toc = time.time()
   nms_time = misc_toc - misc_tic
-  
+
   #cv2.imshow('test', im2show)
-  #cv2.waitKey(0)  
-  
+  #cv2.waitKey(0)
+
   sys.stdout.write('im_detect: {:.3f}s {:.3f}s   \r' \
                     .format(detect_time, nms_time))
   sys.stdout.flush()
@@ -371,7 +371,7 @@ def handle_image_bbox(req):
   print("Received Image, start Detection")
   image = req.image
   bridge = CvBridge()
-  image = bridge.imgmsg_to_cv2(image, "bgr8")  
+  image = bridge.imgmsg_to_cv2(image, "bgr8")
 
   return image_process_bbox_with_nms(image)
 
@@ -379,8 +379,8 @@ def handle_image_objects(req):
   print("Received Image, start Detection")
   image = req.image
   bridge = CvBridge()
-  image = bridge.imgmsg_to_cv2(image, "bgr8") 
-  
+  image = bridge.imgmsg_to_cv2(image, "bgr8")
+
   return image_process(image)
 
 def bbox_detection_server():
@@ -396,6 +396,9 @@ if __name__ == '__main__':
 
   print('Called with args:')
   print(args)
+
+  if args.dataset == 'coco':
+    args.set_cfgs = ['ANCHOR_SCALES', '[4, 8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]']
 
   if args.cfg_file is not None:
     cfg_from_file(args.cfg_file)
@@ -422,9 +425,21 @@ if __name__ == '__main__':
   #                     'motorbike', 'person', 'pottedplant',
   #                     'sheep', 'sofa', 'train', 'tvmonitor'])
 
-  pascal_classes = np.asarray(['__background__', # always index 0
+  if args.dataset == 'progress':
+    pascal_classes = np.asarray(['__background__', # always index 0
             'apple', 'bowl', 'cereal', 'coke', 'cup', 'milk', 'pringle', 'table', 'shampoo',
             'alumn_cup', 'dispenser', 'loofah', 'rack'])
+  elif args.dataset == 'coco':
+    pascal_classes = np.asarray(['__background__', # always index 0
+          'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
+          'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse',
+          'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase',
+          'frisbee', 'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat', 'baseball glove', 'skateboard',
+          'surfboard', 'tennis racket', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana',
+          'apple', 'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch',
+          'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',
+          'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
+          'hair drier', 'toothbrush'])
 
   # initilize the network here.
   if args.net == 'vgg16':
@@ -487,4 +502,3 @@ if __name__ == '__main__':
   vis = True
 
   bbox_detection_server()
-  
