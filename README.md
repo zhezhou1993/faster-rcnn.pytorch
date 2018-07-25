@@ -1,5 +1,11 @@
 # A *Faster* Pytorch Implementation of Faster R-CNN
 
+## Set Up Training
+1. make a link to DATASET folder, and put it in root folder of faster-rcnn.pytorch
+2. In lib/datasets, create DATASET.py for creating image database (example: progress.py)
+3. In lib/datasets/factory.py, add the class created above to the dictionary `__sets` (example, dataset.progress)
+4. In trainval_net.py, set configurations `if args.dataset == DATASET` (example, progress)
+
 ## Some common ommands
 
 * `python trainval_net.py --dataset progress --net vgg16 --bs 4 --cuda --s SESSION --epochs 30 --lr 0.01 --lr_decay_step 10 --lr_decay_gamma 0.5 --use_tfboard (--o sgd or adam)`
@@ -10,7 +16,7 @@
 
 * `python reval.py --imdb progress_test --output_dir output/vgg16/progress_test/faster_rcnn_10 --matlab`
 
-* ` tensorboard --logdir=./logs`
+* ` tensorboard --logdir=./logs` to view training progress on web browser
 
 *  `python trainval_net.py --net vgg16 --dataset progress --r True --checksession 1 --checkepoch 24 --checkpoint 431 --use_tfboard --epochs 30 --cuda --lr 0.0025 --lr_decay_step 10 --bs 4`
 
