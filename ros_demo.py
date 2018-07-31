@@ -425,6 +425,7 @@ if __name__ == '__main__':
   #                     'motorbike', 'person', 'pottedplant',
   #                     'sheep', 'sofa', 'train', 'tvmonitor'])
 
+
   if args.dataset == 'progress':
     pascal_classes = np.asarray(['__background__', # always index 0
             'apple', 'bowl', 'cereal', 'coke', 'cup', 'milk', 'pringle', 'table', 'shampoo',
@@ -440,6 +441,9 @@ if __name__ == '__main__':
           'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',
           'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
           'hair drier', 'toothbrush'])
+  elif args.dataset == 'magna':
+    pascal_classes = np.asarray(['__background__', # always index 0
+          'red hat', 'apple charger', 'umbrella', 'golf box', 't-shirt', 'pen'])
 
   # initilize the network here.
   if args.net == 'vgg16':
