@@ -47,7 +47,7 @@ class progress(imdb):
         self._data_path = os.path.join(self._devkit_path, 'progress')
         self._classes = ('__background__', # always index 0
             'apple', 'bowl', 'cereal', 'coke', 'cup', 'milk', 'pringle', 'table', 'shampoo',
-            'alum_cup', 'dispenser', 'loofah', 'rack')
+            'alum_cup', 'dispenser', 'loofah', 'rack', 'brown_table')
 
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
         self._image_ext = '.png'

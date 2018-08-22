@@ -429,7 +429,7 @@ if __name__ == '__main__':
   if args.dataset == 'progress':
     pascal_classes = np.asarray(['__background__', # always index 0
             'apple', 'bowl', 'cereal', 'coke', 'cup', 'milk', 'pringle', 'table', 'shampoo',
-            'alumn_cup', 'dispenser', 'loofah', 'rack'])
+            'alumn_cup', 'dispenser', 'loofah', 'rack', 'brown_table'])
   elif args.dataset == 'coco':
     pascal_classes = np.asarray(['__background__', # always index 0
           'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
