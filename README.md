@@ -6,7 +6,7 @@
 3. In lib/datasets/factory.py, add the class created above to the dictionary `__sets` (example, dataset.progress)
 4. In trainval_net.py, set configurations `if args.dataset == DATASET` (example, progress)
 
-## Some common ommands
+## Some common commands
 
 * `python trainval_net.py --dataset progress --net vgg16 --bs 4 --cuda --s SESSION --epochs 30 --lr 0.01 --lr_decay_step 10 --lr_decay_gamma 0.5 --use_tfboard (--o sgd or adam)`
 
