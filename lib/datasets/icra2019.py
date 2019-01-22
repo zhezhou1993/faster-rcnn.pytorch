@@ -37,17 +37,16 @@ except NameError:
 # <<<< obsolete
 
 
-class progress(imdb):
+class icra2019(imdb):
     def __init__(self, image_set, devkit_path=None):
-        imdb.__init__(self, 'progress_' + image_set)
-        self._year = '2007'
+        imdb.__init__(self, 'icra2019_' + image_set)
+        self._year = '2018'
         self._image_set = image_set
         self._devkit_path = self._get_default_path() if devkit_path is None \
             else devkit_path
-        self._data_path = os.path.join(self._devkit_path, 'progress')
+        self._data_path = os.path.join(self._devkit_path, 'icra2019')
         self._classes = ('__background__', # always index 0
-            'apple', 'bowl', 'cereal', 'coke', 'cup', 'milk', 'pringle', 'table', 'shampoo',
-            'alum_cup', 'dispenser', 'loofah', 'rack', 'brown_table', 'office_desk')
+            'flower_table', 'green_table', 'brown_table', 'grey_box', 'sugar', 'coke', 'sprite', 'green_tea', 'chai_tea', 'remote', 'popcorn', 'pringle', 'grey_cup', 'blue_cup', 'dark_cup', 'the_post_dvd')
 
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
         self._image_ext = '.png'
@@ -255,7 +254,7 @@ class progress(imdb):
     def _get_voc_results_file_template(self):
         # VOCdevkit/results/VOC2007/Main/<comp_id>_det_test_aeroplane.txt
         filename = self._get_comp_id() + '_det_' + self._image_set + '_{:s}.txt'
-        filedir = os.path.join(self._devkit_path, 'results', 'progress', 'Main')
+        filedir = os.path.join(self._devkit_path, 'results', 'icra2019', 'Main')
         if not os.path.exists(filedir):
             os.makedirs(filedir)
         path = os.path.join(filedir, filename)
@@ -265,7 +264,7 @@ class progress(imdb):
         for cls_ind, cls in enumerate(self.classes):
             if cls == '__background__':
                 continue
-            print('Writing {} progress results file'.format(cls))
+            print('Writing {} icra2019 results file'.format(cls))
             filename = self._get_voc_results_file_template().format(cls)
             with open(filename, 'wt') as f:
                 for im_ind, index in enumerate(self.image_index):
@@ -283,13 +282,13 @@ class progress(imdb):
         annopath = os.path.join(
             self._devkit_path,
             #'VOC' + self._year,
-			'progress/'
+			'icra2019/'
             'Annotations',
             '{:s}.xml')
         imagesetfile = os.path.join(
             self._devkit_path,
             #'VOC' + self._year,
-			'progress/',
+			'icra2019/',
             'ImageSets',
             'Main',
             self._image_set + '.txt')
@@ -363,7 +362,7 @@ class progress(imdb):
 
 
 if __name__ == '__main__':
-    d = progress('train')
+    d = icra2019('train')
     res = d.roidb
     from IPython import embed;
 

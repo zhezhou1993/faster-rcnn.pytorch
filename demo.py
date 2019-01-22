@@ -170,10 +170,33 @@ if __name__ == '__main__':
   #                     'cow', 'diningtable', 'dog', 'horse',
   #                     'motorbike', 'person', 'pottedplant',
   #                     'sheep', 'sofa', 'train', 'tvmonitor'])
-
-  pascal_classes = np.asarray(['__background__', # always index 0
-            'apple', 'bowl', 'cereal', 'coke', 'cup', 'milk', 'pringle', 'table', 'shampoo',
-            'alum_cup', 'dispenser', 'loofah', 'rack'])
+  if args.dataset == 'rss2019':
+    pascal_classes = np.asarray(['__background__', # always index 0
+              'pringle', 'coke', 'sprite', 'popcorn', 'dvd', 'remote', 'apple', 'table', 'banana',
+	            'fruit_basket', 'cereal', 'sink_conf', 'rack', 'box_pumpkin', 'box_evil', 'lid_pumpkin',
+              'lid_evil', 'cabinet_lounge', 'cabinet_conf'])
+  elif args.dataset == 'icra2019':
+    pascal_classes = np.asarray(['__background__', # always index 0
+              'flower_table', 'green_table', 'brown_table', 'grey_box', 'sugar', 'coke', 'sprite', 'green_tea', 'chai_tea', 'remote',
+              'popcorn', 'pringle', 'grey_cup', 'blue_cup', 'dark_cup', 'the_post_dvd'])
+  elif args.dataset == 'progress':
+    pascal_classes = np.asarray(['__background__', # always index 0
+              'apple', 'bowl', 'cereal', 'coke', 'cup', 'milk', 'pringle', 'table', 'shampoo',
+              'alumn_cup', 'dispenser', 'loofah', 'rack'])
+  elif args.dataset == 'coco':
+    pascal_classes = np.asarray(['__background__', # always index 0
+          'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
+          'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse',
+          'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase',
+          'frisbee', 'skis', 'snowboard', 'sports ball', 'kite', 'baseball bat', 'baseball glove', 'skateboard',
+          'surfboard', 'tennis racket', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana',
+          'apple', 'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake', 'chair', 'couch',
+          'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',
+          'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors', 'teddy bear',
+          'hair drier', 'toothbrush'])
+  elif args.dataset == 'magna':
+    pascal_classes = np.asarray(['__background__', # always index 0
+          'red hat', 'apple charger', 'umbrella', 'golf box', 't-shirt', 'pen'])
 
   # initilize the network here.
   if args.net == 'vgg16':
@@ -333,7 +356,7 @@ if __name__ == '__main__':
               cls_boxes = pred_boxes[inds, :]
             else:
               cls_boxes = pred_boxes[inds][:, j * 4:(j + 1) * 4]
-            
+
             cls_dets = torch.cat((cls_boxes, cls_scores.unsqueeze(1)), 1)
             # cls_dets = torch.cat((cls_boxes, cls_scores), 1)
             cls_dets = cls_dets[order]

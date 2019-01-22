@@ -16,8 +16,20 @@ from datasets.coco import coco
 from datasets.imagenet import imagenet
 from datasets.vg import vg
 from datasets.progress import progress
+from datasets.icra2019 import icra2019
+from datasets.rss2019 import rss2019
 
 import numpy as np
+
+# Set up rss2019
+for split in ['train', 'test']:
+    name = 'rss2019_{}'.format(split)
+    __sets[name] = (lambda split=split: rss2019(split))
+
+# Set up icra2019
+for split in ['train', 'test']:
+    name = 'icra2019_{}'.format(split)
+    __sets[name] = (lambda split=split: icra2019(split))
 
 # Set up progress
 for split in ['train', 'test']:

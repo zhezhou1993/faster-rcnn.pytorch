@@ -19,9 +19,9 @@ def parse_rec(filename):
   for obj in tree.findall('object'):
     obj_struct = {}
     obj_struct['name'] = obj.find('name').text
-    obj_struct['pose'] = obj.find('pose').text
-    obj_struct['truncated'] = int(obj.find('truncated').text)
-    obj_struct['difficult'] = int(obj.find('difficult').text)
+    # obj_struct['pose'] = obj.find('pose').text
+    # obj_struct['truncated'] = int(obj.find('truncated').text)
+    # obj_struct['difficult'] = int(obj.find('difficult').text)
     bbox = obj.find('bndbox')
     obj_struct['bbox'] = [int(bbox.find('xmin').text),
                           int(bbox.find('ymin').text),
@@ -135,11 +135,11 @@ def voc_eval(detpath,
   for imagename in imagenames:
     R = [obj for obj in recs[imagename] if obj['name'] == classname]
     bbox = np.array([x['bbox'] for x in R])
-    difficult = np.array([x['difficult'] for x in R]).astype(np.bool)
+    # difficult = np.array([x['difficult'] for x in R]).astype(np.bool)
     det = [False] * len(R)
-    npos = npos + sum(~difficult)
+    # npos = npos + sum(~difficult)
     class_recs[imagename] = {'bbox': bbox,
-                             'difficult': difficult,
+                            #  'difficult': difficult,
                              'det': det}
 
   # read dets
@@ -191,7 +191,7 @@ def voc_eval(detpath,
         jmax = np.argmax(overlaps)
 
       if ovmax >= ovthresh:
-        if not R['difficult'][jmax]:
+        # if not R['difficult'][jmax]:
           if not R['det'][jmax]:
             tp[d] = 1.
             R['det'][jmax] = 1

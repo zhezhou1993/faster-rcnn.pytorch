@@ -68,7 +68,7 @@ def parse_args():
                       action='store_true')
   parser.add_argument('--ls', dest='large_scale',
                       help='whether use large imag scale',
-                      action='store_true')                      
+                      action='store_true')
   parser.add_argument('--mGPUs', dest='mGPUs',
                       help='whether use multiple GPUs',
                       action='store_true')
@@ -157,7 +157,15 @@ if __name__ == '__main__':
     # Set the logger
     logger = Logger('./logs')
 
-  if args.dataset == "progress":
+  if args.dataset == "rss2019":
+      args.imdb_name = "rss2019_train"
+      args.imdbval_name = "rss2019_test"
+      args.set_cfgs = ['ANCHOR_SCALES', '[8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]', 'MAX_NUM_GT_BOXES', '20']
+  elif args.dataset == "icra2019":
+      args.imdb_name = "icra2019_train"
+      args.imdbval_name = "icra2019_test"
+      args.set_cfgs = ['ANCHOR_SCALES', '[8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]', 'MAX_NUM_GT_BOXES', '20']
+  elif args.dataset == "progress":
       args.imdb_name = "progress_train"
       args.imdbval_name = "progress_test"
       args.set_cfgs = ['ANCHOR_SCALES', '[8, 16, 32]', 'ANCHOR_RATIOS', '[0.5,1,2]', 'MAX_NUM_GT_BOXES', '20']

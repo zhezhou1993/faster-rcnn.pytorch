@@ -424,12 +424,19 @@ if __name__ == '__main__':
   #                     'cow', 'diningtable', 'dog', 'horse',
   #                     'motorbike', 'person', 'pottedplant',
   #                     'sheep', 'sofa', 'train', 'tvmonitor'])
-
-
-  if args.dataset == 'progress':
+  if args.dataset == 'rss2019':
+    pascal_classes = np.asarray(['__background__', # always index 0
+              'pringle', 'coke', 'sprite', 'popcorn', 'dvd', 'remote', 'apple', 'table', 'banana',
+	            'fruit_basket', 'cereal', 'sink_conf', 'rack', 'box_pumpkin', 'box_evil', 'lid_pumpkin',
+              'lid_evil', 'cabinet_lounge', 'cabinet_conf'])
+  elif args.dataset == 'icra2019':
+    pascal_classes = np.asarray(['__background__', # always index 0
+              'flower_table', 'green_table', 'brown_table', 'grey_box', 'sugar', 'coke', 'sprite', 'green_tea', 'chai_tea', 'remote',
+              'popcorn', 'pringle', 'grey_cup', 'blue_cup', 'dark_cup', 'the_post_dvd'])
+  elif args.dataset == 'progress':
     pascal_classes = np.asarray(['__background__', # always index 0
             'apple', 'bowl', 'cereal', 'coke', 'cup', 'milk', 'pringle', 'table', 'shampoo',
-            'alumn_cup', 'dispenser', 'loofah', 'rack', 'brown_table'])
+            'alumn_cup', 'dispenser', 'loofah', 'rack'])
   elif args.dataset == 'coco':
     pascal_classes = np.asarray(['__background__', # always index 0
           'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
@@ -443,7 +450,7 @@ if __name__ == '__main__':
           'hair drier', 'toothbrush'])
   elif args.dataset == 'magna':
     pascal_classes = np.asarray(['__background__', # always index 0
-          'red hat', 'apple charger', 'umbrella', 'golf box', 't-shirt', 'pen'])
+          'red hat', 'bag', 't-shirt', 'golf box'])
 
   # initilize the network here.
   if args.net == 'vgg16':
