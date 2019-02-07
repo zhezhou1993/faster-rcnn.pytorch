@@ -250,9 +250,9 @@ def image_process_bbox_with_nms(im):
 
   misc_toc = time.time()
   nms_time = misc_toc - misc_tic
-  if vis:
-      cv2.imshow('test', im2show)
-      cv2.waitKey(1)
+
+  # cv2.imshow('test', im2show)
+  # cv2.waitKey(1)
 
   sys.stdout.write('im_detect: {:.3f}s {:.3f}s   \r' \
                     .format(detect_time, nms_time))
@@ -358,9 +358,8 @@ def image_process(im):
   misc_toc = time.time()
   nms_time = misc_toc - misc_tic
 
-  if vis:
-      cv2.imshow('test', im2show)
-      cv2.waitKey(1)
+  # cv2.imshow('test', im2show)
+  # cv2.waitKey(1)
 
   sys.stdout.write('im_detect: {:.3f}s {:.3f}s   \r' \
                     .format(detect_time, nms_time))
