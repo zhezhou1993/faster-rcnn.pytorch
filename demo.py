@@ -172,8 +172,7 @@ if __name__ == '__main__':
   #                     'sheep', 'sofa', 'train', 'tvmonitor'])
 
   pascal_classes = np.asarray(['__background__', # always index 0
-            'apple', 'bowl', 'cereal', 'coke', 'cup', 'milk', 'pringle', 'table', 'shampoo',
-            'alum_cup', 'dispenser', 'loofah', 'rack'])
+                               'red hat', 'bag', 't-shirt', 'golf box'])
 
   # initilize the network here.
   if args.net == 'vgg16':

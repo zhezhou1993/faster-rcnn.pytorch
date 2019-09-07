@@ -16,8 +16,21 @@ from datasets.coco import coco
 from datasets.imagenet import imagenet
 from datasets.vg import vg
 from datasets.progress import progress
-
+from datasets.magna_demo import magna_demo
+from datasets.lfd_demo import lfd_demo
+from datasets.glassloc_demo import glassloc_demo
 import numpy as np
+
+# Set up progress
+for split in ['train', 'test']:
+    name = 'glassloc_demo_{}'.format(split)
+    __sets[name] = (lambda split=split: glassloc_demo(split))
+for split in ['train', 'test']:
+    name = 'lfd_demo_{}'.format(split)
+    __sets[name] = (lambda split=split: lfd_demo(split))
+for split in ['train', 'test']:
+    name = 'magna_demo_{}'.format(split)
+    __sets[name] = (lambda split=split: magna_demo(split))
 
 # Set up progress
 for split in ['train', 'test']:

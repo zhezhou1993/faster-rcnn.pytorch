@@ -1,0 +1,1 @@
+python ros_demo.py --net vgg16 --cfg cfgs/vgg16.yml --checksession 1 --checkepoch 30 --checkpoint 172 --cuda --dataset magna_demo --cls_thresh 0.8

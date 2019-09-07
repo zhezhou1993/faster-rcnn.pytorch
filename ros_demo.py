@@ -431,6 +431,15 @@ if __name__ == '__main__':
     pascal_classes = np.asarray(['__background__', # always index 0
             'apple', 'bowl', 'cereal', 'coke', 'cup', 'milk', 'pringle', 'table', 'shampoo',
             'alumn_cup', 'dispenser', 'loofah', 'rack', 'brown_table'])
+  elif args.dataset == 'glassloc_demo':
+     pascal_classes = np.asarray(['__background__', # always index 0
+           'head', 'tail'])
+  elif args.dataset == 'magna_demo':
+     pascal_classes = np.asarray(['__background__', # always index 0
+           'red hat', 'bag', 't-shirt', 'golf box'])
+  elif args.dataset == 'lfd_demo':
+     pascal_classes = np.asarray(['__background__', # always index 0
+           'handle', 'feather', 'mfc_top', 'mfc_bottom'])
   elif args.dataset == 'coco':
     pascal_classes = np.asarray(['__background__', # always index 0
           'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
@@ -504,6 +513,6 @@ if __name__ == '__main__':
   start = time.time()
   max_per_image = 100
   thresh = 0.05
-  vis = True
+  vis = False
 
   bbox_detection_server()
